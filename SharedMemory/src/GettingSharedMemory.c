@@ -9,7 +9,7 @@ int main(void)
 {
 	int size = 40;
 	int shmid, i, counter=0;
-	char* buf;
+	long* buf;
 
 	clock_t start = clock();
 
@@ -20,7 +20,7 @@ int main(void)
 		exit(1);
 	}
 
-	buf = shmat(shmid, NULL, 0);
+	buf = (long*)shmat(shmid, NULL, 0);
 	if(buf==NULL)
 	{
 		perror("Attaching shared memory segment");
@@ -28,19 +28,7 @@ int main(void)
 	}
 
 	for(i=0;i<size;i++)
-	{
-		printf("Character number: %d Value: %c\n", i, buf[i]);
-		if(buf[i] == buf[i-1] && i!=0)
-			counter++;
-		else
-			counter = 0;
-
-		if(counter==5)
-		{
-			printf("My work here is done\n");
-			break;
-		}
-	}
+		printf("Character number: %d Value: %li\n", i, buf[i]);
 
 	clock_t end = clock();
 	float seconds = (float)(end - start) / CLOCKS_PER_SEC;

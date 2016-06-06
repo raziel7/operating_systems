@@ -22,7 +22,7 @@ int main(void) {
 
 	//Shared memory
 	int shmid, i;
-	char *buf;
+	long *buf;
 	shmid = shmget(45281, size*sizeof(char), IPC_CREAT|0600);
 
 	if(shmid == -1)
@@ -30,18 +30,22 @@ int main(void) {
 		perror("Creating shared memory");
 	}
 
-	buf = shmat(shmid, NULL,0);
+	buf = (long*)shmat(shmid, NULL,0);
 	if(buf == NULL)
 	{
 		perror("Attaching shared memory segment");
 		exit(1);
 	}
 
+	//---------//
+	long p = 2;
+	int q = 2;
+
 	char a;
 	for(i=0;i<size;i++)
 	{
-		a = 'A' + (random() % 26);
-		buf[i] = a;
+		p *= q;
+		buf[i] = p;
 	}
 
 	return EXIT_SUCCESS;
